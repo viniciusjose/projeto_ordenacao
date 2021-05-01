@@ -5,14 +5,22 @@ try {
 	echo "ERRO: ".$e->getMessage();
 	exit;
 }
+if(isset($_GET['ordem']) && !empty($_GET['ordem'])){
+    $ordem = addslashes($_GET['ordem']);
+    $sql = "SELECT * FROM usuarios ORDER BY ".$ordem;
+}else{
+    $ordem = "";
+    $sql = "SELECT * FROM usuarios ";
+
+}       
 ?>
 <p>Selecione abaixo como deseja ordenar a tabela :</p>
 <form method="GET">
     <select name="ordem" onchange = "this.form.submit()">
 
         <option></option>
-        <option value="nome">Pelo nome</option>
-        <option value="idade">Pela idade</option>
+        <option value="nome" <?php echo ($ordem == 'nome')?'selected=selected':'';?> >Pelo nome</option>
+        <option value="idade" <?php echo ($ordem == 'idade')?'selected=selected':'';?> >Pela idade</option>
 
     </select>
 </form>
@@ -22,13 +30,6 @@ try {
 		<th>Idade</th>
 	</tr>
 	<?php
-        if(isset($_GET['ordem']) && !empty($_GET['ordem'])){
-            $ordem = addslashes($_GET['ordem']);
-            $sql = "SELECT * FROM usuarios ORDER BY ".$ordem;
-        }else{
-            $sql = "SELECT * FROM usuarios ";
-
-        }       
         
         $sql = $pdo->query($sql);
         if($sql->rowCount() > 0) {
